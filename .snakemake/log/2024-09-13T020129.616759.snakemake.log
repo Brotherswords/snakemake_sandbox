@@ -1,0 +1,26 @@
+host: Raintree-Max.local
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 10
+Rules claiming more threads will be scaled down.
+Job stats:
+job            count
+-----------  -------
+train_model        1
+total              1
+
+Select jobs to execute...
+Execute 1 jobs...
+
+[Fri Sep 13 02:01:29 2024]
+localrule train_model:
+    output: results/model.h5, results/model_output.txt
+    jobid: 0
+    reason: Missing output files: results/model_output.txt, results/model.h5
+    threads: 4
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Fri Sep 13 02:02:23 2024]
+Finished job 0.
+1 of 1 steps (100%) done
+Complete log: .snakemake/log/2024-09-13T020129.616759.snakemake.log

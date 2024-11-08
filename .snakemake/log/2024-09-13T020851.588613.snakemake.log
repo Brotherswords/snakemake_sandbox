@@ -1,0 +1,30 @@
+host: Raintree-Max.local
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 10
+Rules claiming more threads will be scaled down.
+Job stats:
+job      count
+-----  -------
+all          1
+total        1
+
+Select jobs to execute...
+Execute 1 jobs...
+
+[Fri Sep 13 02:08:51 2024]
+localrule all:
+    output: results/model_plot.png
+    jobid: 0
+    reason: Missing output files: results/model_plot.png
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+Waiting at most 5 seconds for missing files.
+MissingOutputException in rule all in file /Users/lavan/Desktop/Python Things hissssss/SIPLab/Snakemake_Example/Snakefile, line 2:
+Job 0 completed successfully, but some output files are missing. Missing files after 5 seconds. This might be due to filesystem latency. If that is the case, consider to increase the wait time with --latency-wait:
+results/model_plot.png (missing locally, parent dir contents: model_output.txt, model.h5)
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2024-09-13T020851.588613.snakemake.log
+WorkflowError:
+At least one job did not complete successfully.

@@ -1,0 +1,52 @@
+host: Raintree-Max.local
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 10
+Rules claiming more threads will be scaled down.
+Job stats:
+job               count
+--------------  -------
+all                   1
+convert_output        1
+plot_results          1
+total                 3
+
+Select jobs to execute...
+Execute 1 jobs...
+
+[Fri Sep 13 02:14:48 2024]
+localrule convert_output:
+    input: results/model_output.txt
+    output: results/model_output.csv
+    jobid: 2
+    reason: Missing output files: results/model_output.csv
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Fri Sep 13 02:14:48 2024]
+Finished job 2.
+1 of 3 steps (33%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Fri Sep 13 02:14:48 2024]
+localrule plot_results:
+    input: results/model_output.csv
+    output: results/model_plot.png
+    jobid: 1
+    reason: Missing output files: results/model_plot.png; Input files updated by another job: results/model_output.csv
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+RuleException:
+CalledProcessError in file /Users/lavan/Desktop/Python/SIPLab/Snakemake_Example/Snakefile, line 49:
+Command 'set -euo pipefail;  /Users/lavan/anaconda3/bin/python /Users/lavan/Desktop/Python/SIPLab/Snakemake_Example/.snakemake/scripts/tmp9yf8i2ey.plot_results.py' returned non-zero exit status 1.
+[Fri Sep 13 02:14:49 2024]
+Error in rule plot_results:
+    jobid: 1
+    input: results/model_output.csv
+    output: results/model_plot.png
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2024-09-13T021447.888848.snakemake.log
+WorkflowError:
+At least one job did not complete successfully.

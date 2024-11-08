@@ -1,0 +1,31 @@
+host: Raintree-Max.local
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job            count
+-----------  -------
+train_model        1
+total              1
+
+Select jobs to execute...
+Execute 1 jobs...
+
+[Fri Sep 13 01:32:02 2024]
+localrule train_model:
+    output: results/model.h5
+    jobid: 0
+    reason: Missing output files: results/model.h5
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Fri Sep 13 01:32:03 2024]
+Error in rule train_model:
+    jobid: 0
+    output: results/model.h5
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2024-09-13T013202.857612.snakemake.log
+WorkflowError:
+At least one job did not complete successfully.

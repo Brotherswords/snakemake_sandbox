@@ -1,0 +1,51 @@
+host: Raintree-Max.local
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 10
+Rules claiming more threads will be scaled down.
+Job stats:
+job               count
+--------------  -------
+all                   1
+convert_output        1
+plot_results          1
+train_model           1
+total                 4
+
+Select jobs to execute...
+Execute 1 jobs...
+
+[Fri Sep 13 02:27:54 2024]
+localrule train_model:
+    input: train_mnist.py
+    output: results/model.h5, results/model_output.txt
+    jobid: 3
+    reason: Missing output files: results/model_output.txt; Updated input files: train_mnist.py
+    threads: 4
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Fri Sep 13 02:28:48 2024]
+Finished job 3.
+1 of 4 steps (25%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Fri Sep 13 02:28:48 2024]
+localrule convert_output:
+    input: results/model_output.txt
+    output: results/model_output.csv
+    jobid: 2
+    reason: Input files updated by another job: results/model_output.txt
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Fri Sep 13 02:28:49 2024]
+Error in rule convert_output:
+    jobid: 2
+    input: results/model_output.txt
+    output: results/model_output.csv
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2024-09-13T022754.228373.snakemake.log
+WorkflowError:
+At least one job did not complete successfully.

@@ -1,0 +1,35 @@
+host: Raintree-Max.local
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 10
+Rules claiming more threads will be scaled down.
+Job stats:
+job               count
+--------------  -------
+all                   1
+convert_output        1
+plot_results          1
+total                 3
+
+Select jobs to execute...
+Execute 1 jobs...
+
+[Fri Sep 13 02:30:49 2024]
+localrule convert_output:
+    input: results/model_output.txt
+    output: results/model_output.csv
+    jobid: 2
+    reason: Missing output files: results/model_output.csv; Updated input files: results/model_output.txt
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Fri Sep 13 02:30:49 2024]
+Error in rule convert_output:
+    jobid: 2
+    input: results/model_output.txt
+    output: results/model_output.csv
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2024-09-13T023049.313009.snakemake.log
+WorkflowError:
+At least one job did not complete successfully.

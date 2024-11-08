@@ -1,0 +1,7 @@
+host: Raintree-Max.local
+Building DAG of jobs...
+MissingInputException in rule train_model in file /Users/lavan/Desktop/Python Things hissssss/SIPLab/Snakemake_Example/Snakefile, line 1:
+Missing input files for rule train_model:
+    output: results/model.h5
+    affected files:
+        data/input_data.csv
