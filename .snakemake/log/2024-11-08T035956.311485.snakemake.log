@@ -1,0 +1,32 @@
+host: ipsec-10-2-0-8.vpn.gatech.edu
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 10
+Rules claiming more threads will be scaled down.
+Job stats:
+job                        count
+-----------------------  -------
+all                            1
+plot_aggregated_results        1
+total                          2
+
+Select jobs to execute...
+Execute 1 jobs...
+
+[Fri Nov  8 03:59:56 2024]
+localrule plot_aggregated_results:
+    input: results/aggregated_metrics.csv
+    output: results/aggregated_plot.png
+    jobid: 11
+    reason: Missing output files: results/aggregated_plot.png
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+Waiting at most 5 seconds for missing files.
+MissingOutputException in rule plot_aggregated_results in file /Users/lavan/Desktop/Python/SIPLab/Snakemake_Example/Snakefile, line 118:
+Job 11  completed successfully, but some output files are missing. Missing files after 5 seconds. This might be due to filesystem latency. If that is the case, consider to increase the wait time with --latency-wait:
+results/aggregated_plot.png (missing locally, parent dir contents: aggregated_metrics.csv, config2, config3, config1)
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2024-11-08T035956.311485.snakemake.log
+WorkflowError:
+At least one job did not complete successfully.

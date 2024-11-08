@@ -1,0 +1,40 @@
+host: ipsec-10-2-0-8.vpn.gatech.edu
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 10
+Rules claiming more threads will be scaled down.
+Job stats:
+job                        count
+-----------------------  -------
+all                            1
+plot_aggregated_results        1
+total                          2
+
+Select jobs to execute...
+Execute 1 jobs...
+
+[Fri Nov  8 04:02:09 2024]
+localrule plot_aggregated_results:
+    input: results/aggregated_metrics.csv
+    output: results/aggregated_plot.png
+    jobid: 11
+    reason: Missing output files: results/aggregated_plot.png
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Fri Nov  8 04:02:10 2024]
+Finished job 11.
+1 of 2 steps (50%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Fri Nov  8 04:02:10 2024]
+localrule all:
+    input: results/config1/model_plot.png, results/config2/model_plot.png, results/config3/model_plot.png, results/aggregated_metrics.csv, results/aggregated_plot.png
+    jobid: 0
+    reason: Input files updated by another job: results/aggregated_plot.png
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Fri Nov  8 04:02:10 2024]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: .snakemake/log/2024-11-08T040209.482968.snakemake.log

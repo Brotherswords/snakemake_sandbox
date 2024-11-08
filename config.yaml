@@ -1,5 +1,4 @@
 # config.yaml
-
 parameters:
   - id: config1
     epochs: 5
@@ -8,6 +7,5 @@ parameters:
     epochs: 10
     batch_size: 128
   - id: config3
-    epochs: 15
+    epochs: 7
     batch_size: 256
-  # Add more configurations as needed

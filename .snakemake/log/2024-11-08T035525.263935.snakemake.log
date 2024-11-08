@@ -1,0 +1,37 @@
+host: ipsec-10-2-0-8.vpn.gatech.edu
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 10
+Rules claiming more threads will be scaled down.
+Job stats:
+job                        count
+-----------------------  -------
+all                            1
+plot_aggregated_results        1
+total                          2
+
+Select jobs to execute...
+Execute 1 jobs...
+
+[Fri Nov  8 03:55:25 2024]
+localrule plot_aggregated_results:
+    input: results/aggregated_metrics.csv
+    output: results/aggregated_plot.png
+    jobid: 11
+    reason: Missing output files: results/aggregated_plot.png
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Fri Nov  8 03:55:25 2024]
+Error in rule plot_aggregated_results:
+    jobid: 11
+    input: results/aggregated_metrics.csv
+    output: results/aggregated_plot.png
+    shell:
+        python plot_aggregated_results.py results/aggregated_metrics.csv results/aggregated_plot.png
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2024-11-08T035525.263935.snakemake.log
+WorkflowError:
+At least one job did not complete successfully.

@@ -1,38 +1,49 @@
-# Rule to train the MNIST model
+# Snakefile
+
+import yaml
+import os
+
+# Load configurations from config.yaml
+with open("config.yaml") as f:
+    config_data = yaml.safe_load(f)
+
+configs = config_data["parameters"]
+
+# Define the final targets (all model plots and aggregated results)
 rule all:
     input:
-        "results/model_plot.png"
+        expand("results/{config_id}/model_plot.png", config_id=[c["id"] for c in configs]),
+        "results/aggregated_metrics.csv",
+        "results/aggregated_plot.png"
 
+# Rule to train the MNIST model for each configuration
 rule train_model:
-    threads: 4  # Allocate 4 threads (cores) to this rule
     input:
-        script="train_mnist.py"  # Track changes in the training script -> Re-train if there are changes
+        script="train_mnist.py"
     output:
-        "results/model.h5",  # Saving the trained model
-        "results/model_output.txt"  # Saving the model metrics
+        model="results/{config_id}/model.h5",
+        output_txt="results/{config_id}/model_output.txt"
     params:
-        epochs = 11,
-        batch_size = 128,
-        # force_retrain = False  # Option to force retraining
+        epochs=lambda wildcards: next(c for c in configs if c["id"] == wildcards.config_id)["epochs"],
+        batch_size=lambda wildcards: next(c for c in configs if c["id"] == wildcards.config_id)["batch_size"]
+    threads: 4
     shell:
         """
-        # Convert Python boolean to bash-style condition
-        if [ ! -f {output[0]} ]; then
-            echo "Retraining model..."
-            python train_mnist.py --epochs {params.epochs} --batch_size {params.batch_size} --output {output[0]}
+        mkdir -p results/{wildcards.config_id}
+        if [ ! -f {output.model} ]; then
+            echo "Training model for {wildcards.config_id} with epochs={params.epochs}, batch_size={params.batch_size}..."
+            python {input.script} --epochs {params.epochs} --batch_size {params.batch_size} --output {output.model}
         else
-            echo "Model already exists. Skipping training."
+            echo "Model for {wildcards.config_id} already exists. Skipping training."
         fi
         """
 
-
-# Rule to convert the model output (TXT to CSV)
-# Rule to convert the model output (TXT to CSV)
+# Rule to convert the model output (TXT to CSV) for each configuration
 rule convert_output:
     input:
-        "results/model_output.txt"
+        "results/{config_id}/model_output.txt"
     output:
-        "results/model_output.csv"
+        "results/{config_id}/model_output.csv"
     run:
         with open(input[0], 'r') as txt_file:
             data = txt_file.readlines()
@@ -60,7 +71,7 @@ rule convert_output:
                         csv_file.write(f"{epoch},{loss},{val_loss},{accuracy},{val_accuracy}\n")
                     # Get the new epoch number
                     epoch = line.split()[1]
-
+                
                 # Detect loss, accuracy, and validation metrics
                 elif line.startswith("Loss:"):
                     loss = line.split(":")[1].strip()
@@ -75,13 +86,39 @@ rule convert_output:
             if epoch is not None:
                 csv_file.write(f"{epoch},{loss},{val_loss},{accuracy},{val_accuracy}\n")
 
-
-# Rule to generate plots from the CSV
+# Rule to generate plots from the CSV for each configuration
 rule plot_results:
     input:
-        "results/model_output.csv"
+        "results/{config_id}/model_output.csv"
     output:
-        "results/model_plot.png"
+        "results/{config_id}/model_plot.png"
     shell:
         "python plot_results.py {input} {output}"
 
+# Rule to aggregate metrics across all configurations
+rule aggregate_metrics:
+    input:
+        expand("results/{config_id}/model_output.csv", config_id=[c["id"] for c in configs])
+    output:
+        "results/aggregated_metrics.csv"
+    run:
+        import pandas as pd
+
+        df_list = []
+        for csv_file in input:
+            config_id = os.path.basename(os.path.dirname(csv_file))
+            df = pd.read_csv(csv_file)
+            df["config_id"] = config_id
+            df_list.append(df)
+
+        aggregated_df = pd.concat(df_list, ignore_index=True)
+        aggregated_df.to_csv(output[0], index=False)
+
+# Rule to plot aggregated results
+rule plot_aggregated_results:
+    input:
+        "results/aggregated_metrics.csv"
+    output:
+        "results/aggregated_plot.png"
+    shell:
+        "python plot_aggregated_results.py {input} {output}"

@@ -1,0 +1,79 @@
+host: ipsec-10-2-0-8.vpn.gatech.edu
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 10
+Rules claiming more threads will be scaled down.
+Job stats:
+job                        count
+-----------------------  -------
+aggregate_metrics              1
+all                            1
+convert_output                 3
+plot_aggregated_results        1
+plot_results                   3
+train_model                    3
+total                         12
+
+Select jobs to execute...
+Execute 2 jobs...
+
+[Fri Nov  8 03:36:43 2024]
+localrule train_model:
+    input: train_mnist.py
+    output: results/config1/model.h5, results/config1/model_output.txt
+    jobid: 3
+    reason: Missing output files: results/config1/model_output.txt
+    wildcards: config_id=config1
+    threads: 4
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+
+[Fri Nov  8 03:36:43 2024]
+localrule train_model:
+    input: train_mnist.py
+    output: results/config3/model.h5, results/config3/model_output.txt
+    jobid: 9
+    reason: Missing output files: results/config3/model_output.txt
+    wildcards: config_id=config3
+    threads: 4
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Fri Nov  8 03:36:45 2024]
+Error in rule train_model:
+    jobid: 3
+    input: train_mnist.py
+    output: results/config1/model.h5, results/config1/model_output.txt
+    shell:
+        
+        mkdir -p results/config1
+        if [ ! -f results/config1/model.h5 ]; then
+            echo "Training model for config1 with epochs=5, batch_size=64..."
+            python train_mnist.py --epochs 5 --batch_size 64 --output results/config1/model.h5
+        else
+            echo "Model for config1 already exists. Skipping training."
+        fi
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+[Fri Nov  8 03:36:45 2024]
+Error in rule train_model:
+    jobid: 9
+    input: train_mnist.py
+    output: results/config3/model.h5, results/config3/model_output.txt
+    shell:
+        
+        mkdir -p results/config3
+        if [ ! -f results/config3/model.h5 ]; then
+            echo "Training model for config3 with epochs=15, batch_size=256..."
+            python train_mnist.py --epochs 15 --batch_size 256 --output results/config3/model.h5
+        else
+            echo "Model for config3 already exists. Skipping training."
+        fi
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2024-11-08T033643.239603.snakemake.log
+WorkflowError:
+At least one job did not complete successfully.
