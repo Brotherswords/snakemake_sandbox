@@ -2,11 +2,16 @@
 
 import yaml
 import os
+import subprocess
+import time
 
 # Load configurations from config.yaml
 with open("config.yaml") as f:
     config_data = yaml.safe_load(f)
 
+# Extract the 'local' flag, sbatch defaults, and the list of parameters
+local_run = config_data.get("local", False)
+sbatch_defaults = config_data.get("sbatch_defaults", {})
 configs = config_data["parameters"]
 
 # Define the final targets (all model plots and aggregated results)
@@ -25,18 +30,71 @@ rule train_model:
         output_txt="results/{config_id}/model_output.txt"
     params:
         epochs=lambda wildcards: next(c for c in configs if c["id"] == wildcards.config_id)["epochs"],
-        batch_size=lambda wildcards: next(c for c in configs if c["id"] == wildcards.config_id)["batch_size"]
+        batch_size=lambda wildcards: next(c for c in configs if c["id"] == wildcards.config_id)["batch_size"],
+        # Fetch sbatch parameters: override defaults with any specific parameters
+        sbatch_params=lambda wildcards: {**sbatch_defaults, **next(
+            (c.get("sbatch", {}) for c in configs if c["id"] == wildcards.config_id), {}
+        )}
     threads: 4
-    shell:
-        """
-        mkdir -p results/{wildcards.config_id}
-        if [ ! -f {output.model} ]; then
-            echo "Training model for {wildcards.config_id} with epochs={params.epochs}, batch_size={params.batch_size}..."
-            python {input.script} --epochs {params.epochs} --batch_size {params.batch_size} --output {output.model}
-        else
-            echo "Model for {wildcards.config_id} already exists. Skipping training."
-        fi
-        """
+    run:
+        os.makedirs(os.path.dirname(output.model), exist_ok=True)
+
+        if local_run:
+            # Local Execution
+            if not os.path.exists(output.model):
+                print(f"Training model for {wildcards.config_id} with epochs={params.epochs}, batch_size={params.batch_size}...")
+                shell(
+                    f"python {input.script} --epochs {params.epochs} --batch_size {params.batch_size} --output {output.model} > {output.output_txt}"
+                )
+            else:
+                print(f"Model for {wildcards.config_id} already exists. Skipping training.")
+        else:
+            # HPC Submission via sbatch
+
+            # Extract sbatch parameters
+            sbatch_time = params.sbatch_params.get("time", sbatch_defaults.get("time", "01:00:00"))
+            sbatch_mem = params.sbatch_params.get("mem", sbatch_defaults.get("mem", "4G"))
+            sbatch_cpus = params.sbatch_params.get("cpus_per_task", sbatch_defaults.get("cpus_per_task", 4))
+            sbatch_partition = params.sbatch_params.get("partition", sbatch_defaults.get("partition", "default"))
+            sbatch_output = params.sbatch_params.get("output", sbatch_defaults.get("output", "sbatch.out"))
+            sbatch_error = params.sbatch_params.get("error", sbatch_defaults.get("error", "sbatch.err"))
+
+            # Define paths for sbatch output and error logs
+            sbatch_out_path = f"results/{wildcards.config_id}/{sbatch_output}"
+            sbatch_err_path = f"results/{wildcards.config_id}/{sbatch_error}"
+
+            # Prepare sbatch submission script with variable parameters
+            sbatch_script = f"""#!/bin/bash
+#SBATCH --job-name=train_{wildcards.config_id}
+#SBATCH --output={sbatch_out_path}
+#SBATCH --error={sbatch_err_path}
+#SBATCH --time={sbatch_time}
+#SBATCH --mem={sbatch_mem}
+#SBATCH --cpus-per-task={sbatch_cpus}
+#SBATCH --partition={sbatch_partition}
+
+echo "Starting training for {wildcards.config_id}"
+python {input.script} --epochs {params.epochs} --batch_size {params.batch_size} --output {output.model} > {output.output_txt}
+echo "Training completed for {wildcards.config_id}"
+"""
+
+            # Path to save the sbatch submission script
+            script_path = f"results/{wildcards.config_id}/submit_train.sh"
+
+            # Write the sbatch script to file
+            with open(script_path, "w") as f:
+                f.write(sbatch_script)
+
+            # Submit the job
+            print(f"Submitting job for {wildcards.config_id} via sbatch...")
+            subprocess.run(["sbatch", script_path], check=True)
+
+            # Optionally, wait for the job to complete by polling for the output file
+            print(f"Waiting for the job {wildcards.config_id} to complete...")
+            while not os.path.exists(output.model):
+                time.sleep(30)  # Check every 30 seconds
+
+            print(f"Job for {wildcards.config_id} has completed.")
 
 # Rule to convert the model output (TXT to CSV) for each configuration
 rule convert_output:

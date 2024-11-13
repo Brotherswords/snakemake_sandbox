@@ -1,4 +1,16 @@
 # config.yaml
+
+local: true # Set to 'false' to submit jobs to HPC using sbatch
+
+# ignored when local: true
+sbatch_defaults:
+  time: "01:00:00"
+  mem: "4G"
+  cpus_per_task: 4
+  partition: "default"
+  output: "sbatch.out"
+  error: "sbatch.err"
+
 parameters:
   - id: config1
     epochs: 5

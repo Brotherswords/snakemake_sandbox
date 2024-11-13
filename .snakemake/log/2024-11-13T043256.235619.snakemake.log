@@ -1,0 +1,189 @@
+host: Raintree-Max.local
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 10
+Rules claiming more threads will be scaled down.
+Job stats:
+job                        count
+-----------------------  -------
+aggregate_metrics              1
+all                            1
+convert_output                 3
+plot_aggregated_results        1
+plot_results                   3
+train_model                    3
+total                         12
+
+Select jobs to execute...
+Execute 2 jobs...
+
+[Wed Nov 13 04:32:56 2024]
+localrule train_model:
+    input: train_mnist.py
+    output: results/config3/model.h5, results/config3/model_output.txt
+    jobid: 9
+    reason: Code has changed since last execution; Params have changed since last execution
+    wildcards: config_id=config3
+    threads: 4
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+
+[Wed Nov 13 04:32:56 2024]
+localrule train_model:
+    input: train_mnist.py
+    output: results/config2/model.h5, results/config2/model_output.txt
+    jobid: 6
+    reason: Code has changed since last execution; Params have changed since last execution
+    wildcards: config_id=config2
+    threads: 4
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Wed Nov 13 04:33:33 2024]
+Finished job 9.
+1 of 12 steps (8%) done
+Select jobs to execute...
+Execute 2 jobs...
+
+[Wed Nov 13 04:33:33 2024]
+localrule convert_output:
+    input: results/config3/model_output.txt
+    output: results/config3/model_output.csv
+    jobid: 8
+    reason: Input files updated by another job: results/config3/model_output.txt
+    wildcards: config_id=config3
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Wed Nov 13 04:33:33 2024]
+localrule train_model:
+    input: train_mnist.py
+    output: results/config1/model.h5, results/config1/model_output.txt
+    jobid: 3
+    reason: Code has changed since last execution; Params have changed since last execution
+    wildcards: config_id=config1
+    threads: 4
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Wed Nov 13 04:33:34 2024]
+Finished job 8.
+2 of 12 steps (17%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Wed Nov 13 04:33:34 2024]
+localrule plot_results:
+    input: results/config3/model_output.csv
+    output: results/config3/model_plot.png
+    jobid: 7
+    reason: Input files updated by another job: results/config3/model_output.csv
+    wildcards: config_id=config3
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Wed Nov 13 04:33:35 2024]
+Finished job 7.
+3 of 12 steps (25%) done
+[Wed Nov 13 04:34:09 2024]
+Finished job 6.
+4 of 12 steps (33%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Wed Nov 13 04:34:09 2024]
+localrule convert_output:
+    input: results/config2/model_output.txt
+    output: results/config2/model_output.csv
+    jobid: 5
+    reason: Input files updated by another job: results/config2/model_output.txt
+    wildcards: config_id=config2
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Wed Nov 13 04:34:10 2024]
+Finished job 5.
+5 of 12 steps (42%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Wed Nov 13 04:34:10 2024]
+localrule plot_results:
+    input: results/config2/model_output.csv
+    output: results/config2/model_plot.png
+    jobid: 4
+    reason: Input files updated by another job: results/config2/model_output.csv
+    wildcards: config_id=config2
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Wed Nov 13 04:34:11 2024]
+Finished job 4.
+6 of 12 steps (50%) done
+[Wed Nov 13 04:34:20 2024]
+Finished job 3.
+7 of 12 steps (58%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Wed Nov 13 04:34:20 2024]
+localrule convert_output:
+    input: results/config1/model_output.txt
+    output: results/config1/model_output.csv
+    jobid: 2
+    reason: Input files updated by another job: results/config1/model_output.txt
+    wildcards: config_id=config1
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Wed Nov 13 04:34:20 2024]
+Finished job 2.
+8 of 12 steps (67%) done
+Select jobs to execute...
+Execute 2 jobs...
+
+[Wed Nov 13 04:34:20 2024]
+localrule plot_results:
+    input: results/config1/model_output.csv
+    output: results/config1/model_plot.png
+    jobid: 1
+    reason: Input files updated by another job: results/config1/model_output.csv
+    wildcards: config_id=config1
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+
+[Wed Nov 13 04:34:20 2024]
+localrule aggregate_metrics:
+    input: results/config1/model_output.csv, results/config2/model_output.csv, results/config3/model_output.csv
+    output: results/aggregated_metrics.csv
+    jobid: 10
+    reason: Input files updated by another job: results/config2/model_output.csv, results/config3/model_output.csv, results/config1/model_output.csv
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Wed Nov 13 04:34:21 2024]
+Finished job 1.
+9 of 12 steps (75%) done
+[Wed Nov 13 04:34:21 2024]
+Finished job 10.
+10 of 12 steps (83%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Wed Nov 13 04:34:21 2024]
+localrule plot_aggregated_results:
+    input: results/aggregated_metrics.csv
+    output: results/aggregated_plot.png
+    jobid: 11
+    reason: Input files updated by another job: results/aggregated_metrics.csv
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Wed Nov 13 04:34:22 2024]
+Finished job 11.
+11 of 12 steps (92%) done
+Select jobs to execute...
+Execute 1 jobs...
+
+[Wed Nov 13 04:34:22 2024]
+localrule all:
+    input: results/config1/model_plot.png, results/config2/model_plot.png, results/config3/model_plot.png, results/aggregated_metrics.csv, results/aggregated_plot.png
+    jobid: 0
+    reason: Input files updated by another job: results/aggregated_metrics.csv, results/config2/model_plot.png, results/config1/model_plot.png, results/config3/model_plot.png, results/aggregated_plot.png
+    resources: tmpdir=/var/folders/7k/gy0ltxvs51sf5w1stk7h06vw0000gn/T
+
+[Wed Nov 13 04:34:22 2024]
+Finished job 0.
+12 of 12 steps (100%) done
+Complete log: .snakemake/log/2024-11-13T043256.235619.snakemake.log
